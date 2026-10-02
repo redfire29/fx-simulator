@@ -12,6 +12,7 @@ export function useTrading() {
 
   // 遊戲勝負狀態
   const isVictory = ref<boolean>(false);
+  const hasWon = ref<boolean>(false);
   const isGameOver = ref<boolean>(false);
   const isLiquidationAlert = ref<boolean>(false);
 
@@ -95,14 +96,6 @@ export function useTrading() {
     const currentDrawdown = ((peakEquity.value - equity.value) / peakEquity.value) * 100;
     if (currentDrawdown > maxDrawdown.value) {
       maxDrawdown.value = currentDrawdown;
-    }
-
-    // 勝利檢測: 權益達成 20,000,000 円以上
-    if (equity.value >= VICTORY_TARGET) {
-      closePosition(currentPrice);
-      isVictory.value = true;
-      saveBestRecord();
-      return;
     }
 
     // 強制平倉檢測 (Liquidation)
@@ -228,9 +221,17 @@ export function useTrading() {
     if (!activePosition.value) return;
 
     const pos = activePosition.value;
-    updatePosition(currentPrice);
+    
+    // 計算最新平倉損益
+    let pnl = 0;
+    if (pos.side === 'BUY') {
+      pnl = ((currentPrice - pos.entryPrice) / pos.entryPrice) * pos.positionSize;
+    } else {
+      pnl = ((pos.entryPrice - currentPrice) / pos.entryPrice) * pos.positionSize;
+    }
+    const finalPnl = Math.round(pnl);
+    const finalPnlPercent = Number(((pnl / pos.margin) * 100).toFixed(2));
 
-    const finalPnl = pos.pnl;
     balance.value = Math.max(0, balance.value + finalPnl);
 
     tradeHistory.value.unshift({
@@ -241,16 +242,17 @@ export function useTrading() {
       entryPrice: pos.entryPrice,
       closePrice: currentPrice,
       pnl: finalPnl,
-      pnlPercent: pos.pnlPercent,
+      pnlPercent: finalPnlPercent,
       isLiquidation: false,
       time: Date.now()
     });
 
     activePosition.value = null;
 
-    // 勝利或破產檢測
-    if (balance.value >= VICTORY_TARGET) {
+    // 勝利或破產檢測 (達成 2,000 萬僅首度彈出勝利彈窗)
+    if (balance.value >= VICTORY_TARGET && !hasWon.value) {
       isVictory.value = true;
+      hasWon.value = true;
       saveBestRecord();
     } else if (balance.value < MIN_MARGIN) {
       isGameOver.value = true;
@@ -299,6 +301,7 @@ export function useTrading() {
     activePosition.value = null;
     tradeHistory.value = [];
     isVictory.value = false;
+    hasWon.value = false;
     isGameOver.value = false;
     isLiquidationAlert.value = false;
     gameStartTime.value = Date.now();
@@ -312,6 +315,7 @@ export function useTrading() {
     activePosition,
     tradeHistory,
     isVictory,
+    hasWon,
     isGameOver,
     isLiquidationAlert,
     equity,
