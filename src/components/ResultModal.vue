@@ -44,11 +44,11 @@ function formatTime(seconds: number): string {
     </div>
   </Transition>
 
-  <!-- 勝負終局結算彈窗 (勝利為粉白毛玻璃，失敗為沉穩深暗玫瑰遮罩) -->
+  <!-- 勝負終局結算彈窗 (勝利為官網溫潤櫻花粉，失敗為沉穩深暗玫瑰遮罩) -->
   <div
     v-if="isVictory || isGameOver"
-    class="fixed inset-0 z-50 backdrop-blur-md flex items-center justify-center p-4 select-none transition-colors duration-300"
-    :class="isVictory ? 'bg-[rgba(255,159,199,0.55)]' : 'bg-[rgba(20,10,15,0.88)]'"
+    class="fixed inset-0 z-50 backdrop-blur-[10px] flex items-center justify-center p-4 select-none transition-colors duration-300"
+    :class="isVictory ? 'bg-[rgba(255,198,218,0.68)]' : 'bg-[rgba(20,10,15,0.88)]'"
   >
     <div
       class="w-full max-w-md border-2 rounded-2xl p-6 shadow-2xl flex flex-col space-y-5 transition-all"

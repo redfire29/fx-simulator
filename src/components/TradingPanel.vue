@@ -285,7 +285,7 @@ watch(
           :disabled="freeMargin < minMargin"
           class="flex flex-col items-center justify-center bg-gradient-to-b from-[#FF78A6] to-[#E84880] hover:from-[#FFA3C3] hover:to-[#FF78A6] disabled:opacity-40 disabled:cursor-not-allowed text-white py-2.5 rounded-xl font-bold shadow-md shadow-pink-500/20 transition-all active:scale-[0.98]"
         >
-          <span class="text-xs font-black tracking-wider">🌸 買入 (做多)</span>
+          <span class="text-xs font-black tracking-wider">買入 (做多)</span>
           <span class="text-[9px] text-pink-100 font-normal">買漲 UP</span>
         </button>
 
@@ -295,7 +295,7 @@ watch(
           :disabled="freeMargin < minMargin"
           class="flex flex-col items-center justify-center bg-gradient-to-b from-[#17BCC8] to-[#0E9AA7] hover:from-[#35D7E2] hover:to-[#17BCC8] disabled:opacity-40 disabled:cursor-not-allowed text-white py-2.5 rounded-xl font-bold shadow-md shadow-cyan-500/20 transition-all active:scale-[0.98]"
         >
-          <span class="text-xs font-black tracking-wider">🌊 賣出 (做空)</span>
+          <span class="text-xs font-black tracking-wider">賣出 (做空)</span>
           <span class="text-[9px] text-cyan-100 font-normal">買跌 DOWN</span>
         </button>
       </div>
