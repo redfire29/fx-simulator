@@ -123,6 +123,7 @@ function handleContinue() {
           :currentPrice="currentPrice"
           :activePosition="activePosition"
           :minMargin="MIN_MARGIN"
+          :gameStartTime="stats.gameStartTime"
           @openPosition="handleOpenPosition"
           @closePosition="handleClosePosition"
         />

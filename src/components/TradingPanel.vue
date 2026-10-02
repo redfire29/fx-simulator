@@ -8,6 +8,7 @@ const props = defineProps<{
   currentPrice: number;
   activePosition: Position | null;
   minMargin: number;
+  gameStartTime?: number;
 }>();
 
 const emit = defineEmits<{
@@ -18,6 +19,7 @@ const emit = defineEmits<{
 // 輸入狀態
 const inputMargin = ref<number>(50_000);
 const selectedLeverage = ref<number>(100);
+const selectedPercent = ref<number | null>(null);
 
 const leverageOptions = [10, 25, 50, 100, 200, 400, 500];
 
@@ -36,11 +38,19 @@ const estimatedLiquidation = computed(() => {
   };
 });
 
-// 快速百分比設定保證金
+// 快速百分比設定保證金 (記憶百分比模式)
 function setMarginPercent(percent: number) {
+  selectedPercent.value = percent;
   const maxAvailable = props.freeMargin;
-  const amount = Math.floor((maxAvailable * percent) / 100);
-  inputMargin.value = Math.max(props.minMargin, amount);
+  if (!props.activePosition || maxAvailable > 0) {
+    const amount = Math.floor((maxAvailable * percent) / 100);
+    inputMargin.value = Math.max(props.minMargin, amount);
+  }
+}
+
+// 手動輸入金額時解除百分比鎖定
+function handleManualInput() {
+  selectedPercent.value = null;
 }
 
 // 觸發下單
@@ -63,13 +73,37 @@ function formatYen(amount: number): string {
   return Math.round(amount).toLocaleString('ja-JP');
 }
 
-// 當餘額大幅改變時微調預設投入保證金
+// 當可用本金更新或平倉結算時智慧同步保證金金額
 watch(
-  () => props.freeMargin,
-  (newFree) => {
-    if (inputMargin.value > newFree) {
-      inputMargin.value = Math.max(props.minMargin, Math.floor(newFree * 0.25));
+  [() => props.freeMargin, () => props.activePosition],
+  ([newFree, newPos]) => {
+    // 平倉結算後（無持倉部位）或常態資金變化
+    if (!newPos) {
+      if (selectedPercent.value !== null) {
+        // 鎖定百分比模式 (All-in 或指定百分比)：自動動態同步為最新全部金額
+        const amount = Math.floor((newFree * selectedPercent.value) / 100);
+        inputMargin.value = Math.max(props.minMargin, amount);
+      } else if (inputMargin.value > newFree) {
+        // 手動輸入模式下若超出可用金額，防呆調整
+        inputMargin.value = Math.max(props.minMargin, Math.floor(newFree * 0.25));
+      }
+    } else {
+      // 持倉中：若可用餘額不足以支應原本的輸入值，適度校正 (避免超過可用本金)
+      if (selectedPercent.value !== null && newFree > 0) {
+        const amount = Math.floor((newFree * selectedPercent.value) / 100);
+        inputMargin.value = Math.max(props.minMargin, amount);
+      }
     }
+  }
+);
+
+// 遊戲重開局時還原預設值
+watch(
+  () => props.gameStartTime,
+  () => {
+    inputMargin.value = 50_000;
+    selectedLeverage.value = 100;
+    selectedPercent.value = null;
   }
 );
 </script>
@@ -156,37 +190,64 @@ watch(
             <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold font-mono text-xs">¥</span>
             <input
               v-model.number="inputMargin"
+              @input="handleManualInput"
               type="number"
               :min="minMargin"
               :max="freeMargin"
               step="1000"
-              class="w-full bg-[#090d16] border border-slate-700 focus:border-indigo-500 rounded-lg py-1.5 pl-7 pr-3 text-white font-mono font-bold text-xs outline-none transition"
+              class="w-full bg-[#090d16] border focus:border-indigo-500 rounded-lg py-1.5 pl-7 pr-16 text-white font-mono font-bold text-xs outline-none transition"
+              :class="selectedPercent === 100 ? 'border-rose-500/70 bg-rose-950/20 text-rose-200' : selectedPercent ? 'border-amber-500/60 bg-amber-950/20 text-amber-200' : 'border-slate-700'"
             />
+            <!-- 模式標籤指示器 -->
+            <span
+              v-if="selectedPercent === 100"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] bg-rose-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider shadow-sm animate-pulse select-none"
+            >
+              ALL-IN
+            </span>
+            <span
+              v-else-if="selectedPercent"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] bg-amber-600/30 text-amber-300 border border-amber-500/50 px-1.5 py-0.5 rounded font-bold tracking-wider select-none"
+            >
+              {{ selectedPercent }}%
+            </span>
           </div>
 
           <!-- 快速百分比按鈕 -->
           <div class="grid grid-cols-4 gap-1 pt-0.5">
             <button
               @click="setMarginPercent(10)"
-              class="py-1 text-[10px] font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded border border-slate-700 transition"
+              :class="selectedPercent === 10
+                ? 'bg-amber-500/30 text-amber-300 border-amber-500/80 shadow-md shadow-amber-500/20 font-black'
+                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'"
+              class="py-1 text-[10px] font-bold rounded border transition"
             >
               10%
             </button>
             <button
               @click="setMarginPercent(25)"
-              class="py-1 text-[10px] font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded border border-slate-700 transition"
+              :class="selectedPercent === 25
+                ? 'bg-amber-500/30 text-amber-300 border-amber-500/80 shadow-md shadow-amber-500/20 font-black'
+                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'"
+              class="py-1 text-[10px] font-bold rounded border transition"
             >
               25%
             </button>
             <button
               @click="setMarginPercent(50)"
-              class="py-1 text-[10px] font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white rounded border border-slate-700 transition"
+              :class="selectedPercent === 50
+                ? 'bg-amber-500/30 text-amber-300 border-amber-500/80 shadow-md shadow-amber-500/20 font-black'
+                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'"
+              class="py-1 text-[10px] font-bold rounded border transition"
             >
               50%
             </button>
             <button
               @click="setMarginPercent(100)"
-              class="py-1 text-[10px] font-black bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 hover:text-rose-100 rounded border border-rose-800/50 transition"
+              :class="selectedPercent === 100
+                ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white border-rose-400 shadow-lg shadow-rose-600/40 font-black scale-[1.02]'
+                : 'bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 hover:text-rose-100 border-rose-800/50 font-bold'"
+              class="py-1 text-[10px] rounded border transition-all"
             >
               全倉 All-in
             </button>
