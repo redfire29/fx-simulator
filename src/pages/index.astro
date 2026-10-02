@@ -4,16 +4,19 @@ import '../styles/global.css';
 ---
 
 <!doctype html>
-<html lang="zh-TW" class="dark">
+<html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <meta name="generator" content={Astro.generator} />
     <title>FX模擬器 | 30萬挑戰2000萬日圓</title>
     <meta name="description" content="從 30 萬日圓起家，挑戰賺取 2,000 萬日圓的外匯操盤模擬器。支援自訂槓桿、時間加速與即時強平機制。" />
   </head>
-  <body class="bg-[#080b11] text-slate-100 min-h-screen min-h-[100dvh] h-[100dvh] overflow-hidden">
+  <body class="bg-[#FFF7FA] text-[#3B2C30] min-h-screen min-h-[100dvh] h-[100dvh] overflow-hidden font-sans">
     <FxSimulator client:only="vue" />
   </body>
 </html>

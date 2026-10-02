@@ -127,20 +127,20 @@ watch(
     }
 
     if (pos) {
-      // 繪製開倉成本線 (青黃色實線)
+      // 繪製開倉成本線 (久留美粉紅實線)
       entryPriceLine = candleSeries.createPriceLine({
         price: pos.entryPrice,
-        color: '#38bdf8',
+        color: '#FF78A6',
         lineWidth: 2,
         lineStyle: LineStyle.Solid,
         axisLabelVisible: true,
         title: `開倉 ${pos.side === 'BUY' ? '多' : '空'} @ ${pos.entryPrice}`
       });
 
-      // 繪製致命強制平倉線 (亮猩紅色虛線)
+      // 繪製致命強制平倉線 (清透青藍虛線)
       liquidationPriceLine = candleSeries.createPriceLine({
         price: pos.liquidationPrice,
-        color: '#f43f5e',
+        color: '#17BCC8',
         lineWidth: 2,
         lineStyle: LineStyle.Dashed,
         axisLabelVisible: true,
@@ -169,22 +169,22 @@ onUnmounted(() => {
 
 <template>
   <div class="relative w-full h-full flex flex-col">
-    <!-- 圖表頂部即時匯率浮水印標籤 -->
+    <!-- 圖表頂部即時匯率浮水印標籤 (久留美粉白微磨砂徽章) -->
     <div class="absolute top-3 left-4 z-10 flex items-center space-x-3 pointer-events-none">
-      <div class="flex items-center space-x-1.5 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-md border border-slate-700/60 shadow-lg">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="text-xs font-semibold text-slate-200 tracking-wider">USD / JPY</span>
-        <span class="text-[10px] text-slate-400">美金 / 日圓</span>
+      <div class="flex items-center space-x-1.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg border border-[#FFD7E8] shadow-xs text-[#3B2C30]">
+        <span class="w-2 h-2 rounded-full bg-[#FF78A6] animate-pulse"></span>
+        <span class="text-xs font-bold text-[#3B2C30] tracking-wider">USD / JPY</span>
+        <span class="text-[10px] text-[#8C6D77]">美金 / 日圓</span>
       </div>
-      <div v-if="activePosition" class="flex items-center space-x-2 bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-md border border-slate-700/60 shadow-lg">
+      <div v-if="activePosition" class="flex items-center space-x-2 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg border border-[#FFD7E8] shadow-xs">
         <span 
-          :class="activePosition.side === 'BUY' ? 'text-[#F780AE] bg-pink-950/70 border-pink-500/40' : 'text-[#25D5DE] bg-cyan-950/70 border-cyan-500/40'"
+          :class="activePosition.side === 'BUY' ? 'text-[#FF78A6] bg-[#FFF0F5] border-[#FFD7E8]' : 'text-[#17BCC8] bg-[#EBFBFC] border-[#ABE7E7]'"
           class="text-xs font-bold px-1.5 py-0.5 rounded border"
         >
           {{ activePosition.side === 'BUY' ? '多頭' : '空頭' }} {{ activePosition.leverage }}x
         </span>
-        <span class="text-xs text-slate-300">
-          強平價: <span class="text-rose-400 font-mono font-bold">{{ activePosition.liquidationPrice.toFixed(3) }}</span>
+        <span class="text-xs text-[#554046]">
+          強平價: <span class="text-[#17BCC8] font-mono font-bold">{{ activePosition.liquidationPrice.toFixed(3) }}</span>
         </span>
       </div>
     </div>

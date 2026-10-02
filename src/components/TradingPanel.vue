@@ -109,48 +109,48 @@ watch(
 </script>
 
 <template>
-  <div class="w-full h-full bg-[#0d131f] border-t lg:border-t-0 lg:border-l border-slate-800/80 flex flex-col justify-between select-none relative overflow-hidden min-h-0">
+  <div class="w-full h-full bg-white border-t lg:border-t-0 lg:border-l border-[#FFD7E8] flex flex-col justify-between select-none relative overflow-hidden min-h-0">
     <!-- 頂部與內容滾動區 -->
     <div class="flex-1 overflow-y-auto p-3 sm:p-3.5 space-y-3 min-h-0">
       <!-- 頂部標題與可用資金 -->
-      <div class="flex items-center justify-between border-b border-slate-800/90 pb-2">
-        <span class="text-xs font-bold text-slate-200 tracking-wider">操盤下單終端</span>
-        <span class="text-[11px] text-slate-400">
-          可用本金: <span class="text-slate-100 font-mono font-bold">¥{{ formatYen(freeMargin) }}</span>
+      <div class="flex items-center justify-between border-b border-[#FFD7E8] pb-2">
+        <span class="text-xs font-black text-[#3B2C30] tracking-wider">操盤下單終端</span>
+        <span class="text-[11px] text-[#8C6D77]">
+          可用本金: <span class="text-[#FF78A6] font-mono font-black">¥{{ formatYen(freeMargin) }}</span>
         </span>
       </div>
 
       <!-- 若有持倉部位：優先置頂顯示資訊卡 (極速看盤) -->
       <div
         v-if="activePosition"
-        class="bg-[#090d16] border rounded-xl p-2.5 sm:p-3 space-y-2 shadow-lg transition-colors duration-300"
-        :class="activePosition.pnl >= 0 ? 'border-emerald-700/60' : 'border-rose-700/60 border-glow-red'"
+        class="border rounded-xl p-2.5 sm:p-3 space-y-2 shadow-xs transition-colors duration-300"
+        :class="activePosition.pnl >= 0 ? 'bg-[#FFF9FB] border-[#FF78A6]/40 border-glow-pink' : 'bg-[#F4FCFD] border-[#17BCC8]/40 border-glow-cyan'"
       >
         <!-- 部位標題與方向標籤 -->
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
             <span
-              :class="activePosition.side === 'BUY' ? 'bg-pink-950 text-[#F780AE] border-pink-700/70' : 'bg-cyan-950 text-[#25D5DE] border-cyan-700/70'"
-              class="text-xs font-black px-2 py-0.5 rounded border tracking-wide"
+              :class="activePosition.side === 'BUY' ? 'bg-[#FFF0F5] text-[#FF78A6] border-[#FFD7E8]' : 'bg-[#EBFBFC] text-[#17BCC8] border-[#ABE7E7]'"
+              class="text-xs font-black px-2 py-0.5 rounded border tracking-wide shadow-2xs"
             >
               {{ activePosition.side === 'BUY' ? '多頭 LONG' : '空頭 SHORT' }}
             </span>
-            <span class="text-xs text-amber-400 font-mono font-bold">{{ activePosition.leverage }}x 槓桿</span>
+            <span class="text-xs text-[#FF78A6] font-mono font-bold">{{ activePosition.leverage }}x 槓桿</span>
           </div>
-          <span class="text-[11px] text-slate-400 font-mono">本金 ¥{{ formatYen(activePosition.margin) }}</span>
+          <span class="text-[11px] text-[#8C6D77] font-mono">本金 ¥{{ formatYen(activePosition.margin) }}</span>
         </div>
 
-        <!-- 即時未實現損益 -->
-        <div class="bg-slate-900/90 rounded-lg p-2 text-center border border-slate-800">
-          <span class="text-[10px] text-slate-400 block mb-0.5">未實現損益 (PnL)</span>
+        <!-- 即時未實現損益 (久留美體系: 正獲利粉紅、負虧損青藍) -->
+        <div class="bg-white rounded-lg p-2 text-center border border-[#FFD7E8] shadow-2xs">
+          <span class="text-[10px] text-[#8C6D77] block mb-0.5 font-medium">未實現損益 (PnL)</span>
           <div 
-            :class="activePosition.pnl >= 0 ? 'text-emerald-400 glow-green' : 'text-rose-400 glow-red'"
+            :class="activePosition.pnl >= 0 ? 'text-[#FF78A6] glow-pink' : 'text-[#17BCC8] glow-cyan'"
             class="text-2xl font-black font-mono tracking-tight"
           >
             {{ activePosition.pnl >= 0 ? '+' : '' }}¥{{ formatYen(activePosition.pnl) }}
           </div>
           <span 
-            :class="activePosition.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'"
+            :class="activePosition.pnl >= 0 ? 'text-[#FF78A6]' : 'text-[#17BCC8]'"
             class="text-xs font-bold font-mono"
           >
             ({{ activePosition.pnl >= 0 ? '+' : '' }}{{ activePosition.pnlPercent.toFixed(2) }}%)
@@ -159,20 +159,20 @@ watch(
 
         <!-- 價格細節 -->
         <div class="grid grid-cols-2 gap-2 text-[11px] font-mono">
-          <div class="bg-slate-900/50 p-1.5 rounded border border-slate-800/80">
-            <span class="text-slate-400 text-[10px] block">開倉均價</span>
-            <span class="text-slate-200 font-bold">{{ activePosition.entryPrice.toFixed(3) }}</span>
+          <div class="bg-white/80 p-1.5 rounded-lg border border-[#FFD7E8]">
+            <span class="text-[#8C6D77] text-[10px] block">開倉均價</span>
+            <span class="text-[#3B2C30] font-bold">{{ activePosition.entryPrice.toFixed(3) }}</span>
           </div>
-          <div class="bg-slate-900/50 p-1.5 rounded border border-slate-800/80">
-            <span class="text-slate-400 text-[10px] block">當前市價</span>
-            <span class="text-white font-bold">{{ currentPrice.toFixed(3) }}</span>
+          <div class="bg-white/80 p-1.5 rounded-lg border border-[#FFD7E8]">
+            <span class="text-[#8C6D77] text-[10px] block">當前市價</span>
+            <span class="text-[#3B2C30] font-bold">{{ currentPrice.toFixed(3) }}</span>
           </div>
         </div>
 
         <!-- 致命強平警戒 -->
-        <div class="bg-rose-950/40 border border-rose-900/60 p-1.5 sm:p-2 rounded-lg flex items-center justify-between text-xs">
-          <span class="text-rose-300 font-bold">☠️ 強平線:</span>
-          <span class="text-rose-400 font-mono font-black text-sm">{{ activePosition.liquidationPrice.toFixed(3) }}</span>
+        <div class="bg-[#EBFBFC] border border-[#ABE7E7] p-1.5 sm:p-2 rounded-lg flex items-center justify-between text-xs">
+          <span class="text-[#17BCC8] font-bold">☠️ 強平線:</span>
+          <span class="text-[#17BCC8] font-mono font-black text-sm">{{ activePosition.liquidationPrice.toFixed(3) }}</span>
         </div>
       </div>
 
@@ -181,13 +181,13 @@ watch(
         <!-- 投入金額輸入 -->
         <div class="space-y-1">
           <div class="flex justify-between items-center text-xs">
-            <label class="text-slate-300 font-medium">
+            <label class="text-[#554046] font-bold">
               {{ activePosition ? '追加保證金 (日圓)' : '投入保證金 (日圓)' }}
             </label>
-            <span class="text-[10px] text-slate-400 font-mono">最低 ¥{{ formatYen(minMargin) }}</span>
+            <span class="text-[10px] text-[#8C6D77] font-mono">最低 ¥{{ formatYen(minMargin) }}</span>
           </div>
           <div class="relative">
-            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold font-mono text-xs">¥</span>
+            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#FF78A6] font-bold font-mono text-xs">¥</span>
             <input
               v-model.number="inputMargin"
               @input="handleManualInput"
@@ -195,78 +195,62 @@ watch(
               :min="minMargin"
               :max="freeMargin"
               step="1000"
-              class="w-full bg-[#090d16] border focus:border-indigo-500 rounded-lg py-1.5 pl-7 pr-16 text-white font-mono font-bold text-xs outline-none transition"
-              :class="selectedPercent === 100 ? 'border-rose-500/70 bg-rose-950/20 text-rose-200' : selectedPercent ? 'border-amber-500/60 bg-amber-950/20 text-amber-200' : 'border-slate-700'"
+              class="w-full bg-[#FFF9FB] border focus:border-[#FF78A6] rounded-lg py-1.5 pl-7 pr-16 text-[#3B2C30] font-mono font-bold text-xs outline-none transition shadow-2xs"
+              :class="selectedPercent === 100 ? 'border-[#FF78A6] bg-[#FFF0F5] text-[#FF78A6]' : selectedPercent ? 'border-[#FFC6DA] bg-[#FFF5F8] text-[#3B2C30]' : 'border-[#FFD7E8]'"
             />
             <!-- 模式標籤指示器 -->
             <span
               v-if="selectedPercent === 100"
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] bg-rose-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider shadow-sm animate-pulse select-none"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] bg-[#FF78A6] text-white px-1.5 py-0.5 rounded font-black tracking-wider shadow-xs animate-pulse select-none"
             >
               ALL-IN
             </span>
             <span
               v-else-if="selectedPercent"
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] bg-amber-600/30 text-amber-300 border border-amber-500/50 px-1.5 py-0.5 rounded font-bold tracking-wider select-none"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] bg-[#FFD7E8] text-[#FF78A6] border border-[#FFC6DA] px-1.5 py-0.5 rounded font-bold tracking-wider select-none"
             >
               {{ selectedPercent }}%
             </span>
           </div>
 
-          <!-- 快速百分比按鈕 -->
+          <!-- 快速百分比按鈕 (統一粉紅主題系) -->
           <div class="grid grid-cols-4 gap-1 pt-0.5">
             <button
-              @click="setMarginPercent(10)"
-              :class="selectedPercent === 10
-                ? 'bg-amber-500/30 text-amber-300 border-amber-500/80 shadow-md shadow-amber-500/20 font-black'
-                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'"
-              class="py-1 text-[10px] font-bold rounded border transition"
+              v-for="p in [10, 25, 50]"
+              :key="p"
+              @click="setMarginPercent(p)"
+              :class="selectedPercent === p
+                ? 'bg-[#FF78A6] text-white border-[#FF78A6] shadow-xs font-black'
+                : 'bg-[#FFF5F8] hover:bg-[#FFEBF2] text-[#8C6D77] hover:text-[#FF78A6] border-[#FFD7E8] font-bold'"
+              class="py-1 text-[10px] rounded-md border transition"
             >
-              10%
-            </button>
-            <button
-              @click="setMarginPercent(25)"
-              :class="selectedPercent === 25
-                ? 'bg-amber-500/30 text-amber-300 border-amber-500/80 shadow-md shadow-amber-500/20 font-black'
-                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'"
-              class="py-1 text-[10px] font-bold rounded border transition"
-            >
-              25%
-            </button>
-            <button
-              @click="setMarginPercent(50)"
-              :class="selectedPercent === 50
-                ? 'bg-amber-500/30 text-amber-300 border-amber-500/80 shadow-md shadow-amber-500/20 font-black'
-                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'"
-              class="py-1 text-[10px] font-bold rounded border transition"
-            >
-              50%
+              {{ p }}%
             </button>
             <button
               @click="setMarginPercent(100)"
               :class="selectedPercent === 100
-                ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white border-rose-400 shadow-lg shadow-rose-600/40 font-black scale-[1.02]'
-                : 'bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 hover:text-rose-100 border-rose-800/50 font-bold'"
-              class="py-1 text-[10px] rounded border transition-all"
+                ? 'bg-gradient-to-r from-[#FF78A6] to-[#FF4D85] text-white border-[#FF78A6] shadow-sm font-black scale-[1.02]'
+                : 'bg-[#FFF0F5] hover:bg-[#FFE0EB] text-[#FF78A6] hover:text-[#FF4D85] border-[#FFC6DA] font-bold'"
+              class="py-1 text-[10px] rounded-md border transition-all"
             >
               全倉 All-in
             </button>
           </div>
         </div>
 
-        <!-- 槓桿倍數選擇 -->
+        <!-- 槓桿倍數選擇 (統一粉紅主題系) -->
         <div class="space-y-1">
           <div class="flex justify-between items-center text-xs">
-            <label class="text-slate-300 font-medium">槓桿倍數</label>
-            <span class="text-xs font-mono font-bold text-amber-400">{{ selectedLeverage }}x</span>
+            <label class="text-[#554046] font-bold">槓桿倍數</label>
+            <span class="text-xs font-mono font-bold text-[#FF78A6]">{{ selectedLeverage }}x</span>
           </div>
           <div class="grid grid-cols-4 gap-1">
             <button
               v-for="lev in leverageOptions"
               :key="lev"
               @click="selectedLeverage = lev"
-              :class="selectedLeverage === lev ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 font-black' : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700'"
-              class="py-1 text-[11px] rounded border transition"
+              :class="selectedLeverage === lev ? 'bg-[#FF78A6] text-white border-[#FF78A6] font-black shadow-xs' : 'bg-[#FFF5F8] hover:bg-[#FFEBF2] text-[#8C6D77] hover:text-[#FF78A6] border-[#FFD7E8] font-medium'"
+              class="py-1 text-[11px] rounded-md border transition"
             >
               {{ lev }}x
             </button>
@@ -274,32 +258,32 @@ watch(
         </div>
 
         <!-- 下單資訊預覽 -->
-        <div class="bg-[#090d16] p-2 rounded-lg border border-slate-800/80 space-y-0.5 text-[10px]">
-          <div class="flex justify-between text-slate-400">
+        <div class="bg-[#FFF9FB] p-2 rounded-lg border border-[#FFD7E8] space-y-0.5 text-[10px]">
+          <div class="flex justify-between text-[#8C6D77]">
             <span>{{ activePosition ? '預計加碼名義規模:' : '合約名義價值:' }}</span>
-            <span class="text-slate-200 font-mono font-bold">¥{{ formatYen(estimatedPositionSize) }}</span>
+            <span class="text-[#3B2C30] font-mono font-bold">¥{{ formatYen(estimatedPositionSize) }}</span>
           </div>
-          <div v-if="!activePosition || activePosition.side === 'BUY'" class="flex justify-between text-slate-400">
+          <div v-if="!activePosition || activePosition.side === 'BUY'" class="flex justify-between text-[#8C6D77]">
             <span>{{ activePosition ? '加碼後多頭強平參考:' : '買入多頭強平價:' }}</span>
-            <span class="text-rose-400 font-mono">{{ estimatedLiquidation.buy.toFixed(3) }}</span>
+            <span class="text-[#17BCC8] font-mono font-bold">{{ estimatedLiquidation.buy.toFixed(3) }}</span>
           </div>
-          <div v-if="!activePosition || activePosition.side === 'SELL'" class="flex justify-between text-slate-400">
+          <div v-if="!activePosition || activePosition.side === 'SELL'" class="flex justify-between text-[#8C6D77]">
             <span>{{ activePosition ? '加碼後空頭強平參考:' : '賣出空頭強平價:' }}</span>
-            <span class="text-rose-400 font-mono">{{ estimatedLiquidation.sell.toFixed(3) }}</span>
+            <span class="text-[#17BCC8] font-mono font-bold">{{ estimatedLiquidation.sell.toFixed(3) }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 底部固定常駐操作欄 (Sticky Bottom Dock) -->
-    <div class="sticky bottom-0 z-30 bg-[#0d131f]/95 backdrop-blur-md border-t border-slate-800/90 p-3 pt-2.5 pb-[max(0.75rem,calc(env(safe-area-inset-bottom)+0.5rem))] shadow-[0_-8px_20px_rgba(0,0,0,0.5)] flex-shrink-0">
-      <!-- 狀態 A：未持倉時，顯示買入與賣出雙按鈕 -->
+    <div class="sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-[#FFD7E8] p-3 pt-2.5 pb-[max(0.75rem,calc(env(safe-area-inset-bottom)+0.5rem))] shadow-[0_-4px_16px_rgba(255,120,166,0.08)] flex-shrink-0">
+      <!-- 狀態 A：未持倉時，顯示買入與賣出雙按鈕 (久留美官方粉藍) -->
       <div v-if="!activePosition" class="grid grid-cols-2 gap-2">
         <!-- 買入 (Long) -->
         <button
           @click="handleOrder('BUY')"
           :disabled="freeMargin < minMargin"
-          class="flex flex-col items-center justify-center bg-gradient-to-b from-[#F780AE] to-[#E25C8E] hover:from-[#FA93BD] hover:to-[#F780AE] disabled:opacity-40 disabled:cursor-not-allowed text-white py-2.5 rounded-xl font-bold shadow-lg shadow-pink-500/20 transition-all active:scale-[0.98]"
+          class="flex flex-col items-center justify-center bg-gradient-to-b from-[#FF78A6] to-[#E84880] hover:from-[#FFA3C3] hover:to-[#FF78A6] disabled:opacity-40 disabled:cursor-not-allowed text-white py-2.5 rounded-xl font-bold shadow-md shadow-pink-500/20 transition-all active:scale-[0.98]"
         >
           <span class="text-xs font-black tracking-wider">🌸 買入 (做多)</span>
           <span class="text-[9px] text-pink-100 font-normal">買漲 UP</span>
@@ -309,7 +293,7 @@ watch(
         <button
           @click="handleOrder('SELL')"
           :disabled="freeMargin < minMargin"
-          class="flex flex-col items-center justify-center bg-gradient-to-b from-[#25D5DE] to-[#14B2BB] hover:from-[#3DE6EF] hover:to-[#25D5DE] disabled:opacity-40 disabled:cursor-not-allowed text-white py-2.5 rounded-xl font-bold shadow-lg shadow-cyan-500/20 transition-all active:scale-[0.98]"
+          class="flex flex-col items-center justify-center bg-gradient-to-b from-[#17BCC8] to-[#0E9AA7] hover:from-[#35D7E2] hover:to-[#17BCC8] disabled:opacity-40 disabled:cursor-not-allowed text-white py-2.5 rounded-xl font-bold shadow-md shadow-cyan-500/20 transition-all active:scale-[0.98]"
         >
           <span class="text-xs font-black tracking-wider">🌊 賣出 (做空)</span>
           <span class="text-[9px] text-cyan-100 font-normal">買跌 DOWN</span>
@@ -318,19 +302,19 @@ watch(
 
       <!-- 狀態 B：已持倉時，切換為「市價平倉 (75%)」＋「同向加碼 (25%)」 -->
       <div v-else class="flex items-stretch space-x-2">
-        <!-- 主按鈕：市價全數平倉 (75%) -->
+        <!-- 主按鈕：市價全數平倉 (75%) (久留美粉紅活力高彩) -->
         <button
           @click="emit('closePosition')"
-          class="flex-[3] flex flex-col items-center justify-center bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 hover:from-amber-500 hover:to-orange-500 text-white py-2 px-3 rounded-xl font-black shadow-lg shadow-orange-600/30 transition-all active:scale-[0.98] border border-amber-400/40"
+          class="flex-[3] flex flex-col items-center justify-center bg-gradient-to-r from-[#FF78A6] via-[#FF6392] to-[#FF5083] hover:from-[#FF6392] hover:to-[#FF3B76] text-white py-2 px-3 rounded-xl font-black shadow-md shadow-pink-500/25 transition-all active:scale-[0.98] border border-white/40"
         >
           <span class="text-xs tracking-wider flex items-center space-x-1">
             <span>🔥 市價全數平倉</span>
           </span>
           <div class="flex items-center space-x-1.5 text-[11px] font-mono mt-0.5">
-            <span :class="activePosition.pnl >= 0 ? 'text-emerald-200' : 'text-rose-200'" class="font-black">
+            <span :class="activePosition.pnl >= 0 ? 'text-white' : 'text-[#EBFBFC]'" class="font-black">
               {{ activePosition.pnl >= 0 ? '+' : '' }}¥{{ formatYen(activePosition.pnl) }}
             </span>
-            <span :class="activePosition.pnl >= 0 ? 'text-emerald-200' : 'text-rose-200'" class="text-[10px] opacity-90">
+            <span :class="activePosition.pnl >= 0 ? 'text-white/90' : 'text-[#EBFBFC]/90'" class="text-[10px]">
               ({{ activePosition.pnl >= 0 ? '+' : '' }}{{ activePosition.pnlPercent.toFixed(1) }}%)
             </span>
           </div>
@@ -341,9 +325,9 @@ watch(
           @click="handleOrder(activePosition.side)"
           :disabled="freeMargin < minMargin || inputMargin > freeMargin"
           :class="activePosition.side === 'BUY'
-            ? 'bg-gradient-to-b from-[#F780AE] to-[#E25C8E] hover:from-[#FA93BD] hover:to-[#F780AE] shadow-pink-500/20'
-            : 'bg-gradient-to-b from-[#25D5DE] to-[#14B2BB] hover:from-[#3DE6EF] hover:to-[#25D5DE] shadow-cyan-500/20'"
-          class="flex-[1] flex flex-col items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed text-white py-2 px-2 rounded-xl font-bold shadow-lg transition-all active:scale-[0.98] border border-white/20"
+            ? 'bg-gradient-to-b from-[#FF78A6] to-[#E84880] hover:from-[#FFA3C3] hover:to-[#FF78A6] shadow-pink-500/20'
+            : 'bg-gradient-to-b from-[#17BCC8] to-[#0E9AA7] hover:from-[#35D7E2] hover:to-[#17BCC8] shadow-cyan-500/20'"
+          class="flex-[1] flex flex-col items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed text-white py-2 px-2 rounded-xl font-bold shadow-md transition-all active:scale-[0.98] border border-white/20"
           :title="`以當前設定保證金 ¥${formatYen(inputMargin)} 追加持倉`"
         >
           <span class="text-[11px] font-black tracking-wide whitespace-nowrap">

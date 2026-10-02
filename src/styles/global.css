@@ -1,46 +1,65 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "M PLUS 1", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  --color-kurumi-pink: #FF78A6;
+  --color-kurumi-pink-soft: #FFD7E8;
+  --color-kurumi-pink-light: #FFF0F5;
+  --color-kurumi-cyan: #17BCC8;
+  --color-kurumi-cyan-soft: #ABE7E7;
+  --color-kurumi-cyan-light: #EBFBFC;
+  --color-kurumi-yellow: #FFF7C7;
+  --color-kurumi-bg: #FFF7FA;
+  --color-kurumi-text: #3B2C30;
+  --color-kurumi-muted: #8C6D77;
+}
+
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
-    background-color: #080b11;
-    color: #e2e8f0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #FFF7FA;
+    color: #3B2C30;
+    font-family: var(--font-sans);
     user-select: none;
     overflow-x: hidden;
   }
 }
 
-/* 霓虹跳動數值特效與發光邊框 */
+/* 久留美動漫風格微網格底紋 */
+.kurumi-grid-bg {
+  background-color: #FFF7FA;
+  background-image: 
+    linear-gradient(0deg, rgba(255, 120, 166, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 120, 166, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* 柔和發光與陰影 */
 .glow-pink {
-  text-shadow: 0 0 12px rgba(247, 128, 174, 0.5);
+  text-shadow: 0 0 10px rgba(255, 120, 166, 0.45);
+}
+
+.glow-dark-pink {
+  text-shadow: 0 0 14px rgba(232, 72, 116, 0.5);
 }
 
 .glow-cyan {
-  text-shadow: 0 0 12px rgba(37, 213, 222, 0.5);
+  text-shadow: 0 0 10px rgba(23, 188, 200, 0.45);
 }
 
-.glow-green {
-  text-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
-}
-
-.glow-red {
-  text-shadow: 0 0 12px rgba(244, 63, 94, 0.45);
-}
-
-.border-glow-red {
-  box-shadow: 0 0 20px rgba(244, 63, 94, 0.25);
+.glow-gold {
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
 }
 
 .border-glow-pink {
-  box-shadow: 0 0 20px rgba(247, 128, 174, 0.35);
+  box-shadow: 0 0 14px rgba(255, 120, 166, 0.28);
 }
 
 .border-glow-cyan {
-  box-shadow: 0 0 20px rgba(37, 213, 222, 0.35);
+  box-shadow: 0 0 14px rgba(23, 188, 200, 0.28);
 }
 
 /* 數字平滑過渡 */
@@ -48,18 +67,18 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* 自訂極簡捲軸 */
+/* 久留美粉白精緻捲軸 */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0f17;
+  background: #FFF0F5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1f293d;
-  border-radius: 3px;
+  background: #FFD7E8;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #FF78A6;
 }

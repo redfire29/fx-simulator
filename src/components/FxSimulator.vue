@@ -88,7 +88,7 @@ function handleContinue() {
 </script>
 
 <template>
-  <div class="w-screen h-screen h-[100dvh] flex flex-col bg-[#080b11] text-slate-100 overflow-hidden select-none">
+  <div class="w-screen h-screen h-[100dvh] flex flex-col bg-[#FFF7FA] text-[#3B2C30] kurumi-grid-bg overflow-hidden select-none">
     <!-- 頂部導航列與狀態 -->
     <HeaderBar
       :equity="equity"
@@ -107,7 +107,7 @@ function handleContinue() {
     <!-- 主內容區：左側 K 線圖表 + 右側下單終端 -->
     <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative min-h-0">
       <!-- 左側/中央：TradingView 即時 K 線圖表 -->
-      <section class="h-[42vh] sm:h-[48vh] lg:h-full lg:flex-1 relative overflow-hidden bg-[#090d16] flex-shrink-0">
+      <section class="h-[42vh] sm:h-[48vh] lg:h-full lg:flex-1 relative overflow-hidden bg-[#FFE7D1] flex-shrink-0">
         <ChartView
           :candles="candles"
           :currentCandle="currentCandle"
@@ -116,7 +116,7 @@ function handleContinue() {
       </section>
 
       <!-- 右側：操盤下單與部位控制側欄 -->
-      <aside class="flex-1 lg:flex-none w-full lg:w-80 xl:w-96 lg:h-full flex-shrink-0 bg-[#0d131f] z-20 flex flex-col min-h-0 overflow-hidden">
+      <aside class="flex-1 lg:flex-none w-full lg:w-80 xl:w-96 lg:h-full flex-shrink-0 bg-white/95 border-t lg:border-t-0 lg:border-l border-[#FFD7E8] shadow-sm z-20 flex flex-col min-h-0 overflow-hidden">
         <TradingPanel
           :balance="balance"
           :freeMargin="freeMargin"
@@ -131,22 +131,22 @@ function handleContinue() {
     </main>
 
     <!-- 底部最近交易紀錄 (歷史清單，桌機平板顯示) -->
-    <footer v-if="tradeHistory.length > 0" class="hidden md:flex h-7 bg-[#090d16] border-t border-slate-800/80 px-4 items-center justify-between text-[11px] text-slate-400 font-mono overflow-x-auto whitespace-nowrap flex-shrink-0">
+    <footer v-if="tradeHistory.length > 0" class="hidden md:flex h-7 bg-[#FFF0F5]/90 backdrop-blur-sm border-t border-[#FFD7E8] px-4 items-center justify-between text-[11px] text-[#8C6D77] font-mono overflow-x-auto whitespace-nowrap flex-shrink-0">
       <div class="flex items-center space-x-4">
-        <span class="text-slate-500 font-bold uppercase">最近紀錄:</span>
+        <span class="text-[#8C6D77] font-bold uppercase">最近紀錄:</span>
         <div v-for="t in tradeHistory.slice(0, 4)" :key="t.id" class="flex items-center space-x-1.5">
-          <span :class="t.side === 'BUY' ? 'text-emerald-400' : 'text-rose-400'" class="font-bold">
+          <span :class="t.side === 'BUY' ? 'text-[#FF78A6]' : 'text-[#17BCC8]'" class="font-bold">
             {{ t.side === 'BUY' ? '買入' : '賣出' }}{{ t.leverage }}x
           </span>
-          <span :class="t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'">
+          <span :class="t.pnl >= 0 ? 'text-[#FF78A6]' : 'text-[#17BCC8]'">
             {{ t.pnl >= 0 ? '+' : '' }}¥{{ Math.round(t.pnl).toLocaleString('ja-JP') }}
           </span>
-          <span v-if="t.isLiquidation" class="text-rose-500 font-bold bg-rose-950/80 px-1 py-0.2 rounded text-[10px]">
+          <span v-if="t.isLiquidation" class="text-[#17BCC8] font-bold bg-[#EBFBFC] border border-[#ABE7E7] px-1 py-0.2 rounded text-[10px]">
             [爆倉]
           </span>
         </div>
       </div>
-      <div class="text-slate-500">
+      <div class="text-[#8C6D77]">
         總累計手數: {{ stats.totalTrades }} 筆
       </div>
     </footer>
